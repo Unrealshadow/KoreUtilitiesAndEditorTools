@@ -36,6 +36,9 @@ The **`ConvertListOfDictionariesToJson()`** method converts the list of dictiona
 
 The **`WriteJsonFile()`** method writes the JSON string to a file using **`File.WriteAllText()`**.
 
+### **GenerateModelClassFromJSON()**
+Generates a C# model class from the JSON string. The model class has properties for each column in the Excel file with corresponding data types. The model class is saved to the "Assets/Scripts/ModelScripts" folder.
+
 ### **OnGUI()**
 
 The **`OnGUI()`** method creates the user interface for the script. It includes a label for the script name, buttons to select the Excel file and convert it to JSON, and text fields for the file paths and names.
