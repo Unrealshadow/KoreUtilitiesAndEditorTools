@@ -2,6 +2,7 @@
 - [ExcelToJSON Converter](#exceltojson)
 - [Prefab Scanner](#prefab-scanner)
 - [Animation Utility](#animation-utility)
+- [Addressable Utility](#addressable-utility)
 
 # KoreUtilitiesAndEditorTools
 
@@ -122,3 +123,38 @@ AnimationUtility.PlayAnimation("Jump", true, () => Debug.Log("Jump started!"), (
 
 - This class assumes that the Animator component is attached to the same GameObject that this script is attached to.
 - This class uses a helper MonoBehaviour to run the DelayedCallback coroutine. This MonoBehaviour is created automatically and does not need to be added to any GameObjects.
+
+# **AddressableUtility** <a name="addressable-utility"></a>
+The AddressableUtility class provides utility functions for loading, preloading, and unloading Unity Addressable assets asynchronously. It also includes a simple object pool for getting assets that have been loaded.
+
+### **Class Members**
+
+```private static Dictionary<string, AsyncOperationHandle> loadedAssets = new Dictionary<string, AsyncOperationHandle>();```</br>
+A private dictionary that stores the loaded assets' name and handle.
+
+```public static async Task<T> LoadAddressableAsset<T>(string assetName) where T : Object```</br>
+Loads the Unity Addressable asset with the specified asset name asynchronously and returns the loaded asset. If the asset is already loaded, the function returns the loaded asset immediately.
+
+**assetName:** The name of the asset to load.</br>
+Returns: The loaded asset.</br>
+```public static async Task<T> LoadAddressableAssetAsync<T>(string assetName) where T : Object```</br>
+Loads the Unity Addressable asset with the specified asset name asynchronously and returns the loaded asset. If the asset is already loaded, the function returns the loaded asset immediately.
+
+**assetName:** The name of the asset to load.</br>
+**Returns:** The loaded asset.</br>
+```public static async Task PreloadAddressables(IEnumerable<string> assetNames)```</br>
+Preloads a list of Unity Addressable assets asynchronously.
+
+**assetNames:** A list of asset names to preload.</br>
+```public static T GetFromPool<T>(string assetName) where T : Object```</br>
+Returns the loaded Unity Addressable asset with the specified asset name from the object pool.
+
+**assetName:** The name of the asset to get.</br>
+**Returns:** The loaded asset.</br>
+```public static Task UnloadAddressable(string assetName)```</br>
+Unloads the Unity Addressable asset with the specified asset name asynchronously.
+
+**assetName:** The name of the asset to unload.</br>
+**Returns:** A Task representing the completion of the operation.</br>
+```public static void UnloadAllAddressables()```</br>
+Unloads all the loaded Unity Addressable assets asynchronously.
