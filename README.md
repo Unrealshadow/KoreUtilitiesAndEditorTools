@@ -3,7 +3,7 @@
 - [Prefab Scanner](#prefab-scanner)
 - [Animation Utility](#animation-utility)
 - [Event Utility](#event-utility)
-- [Event Utility](#addressable-utility)
+- [Addressable Utility](#addressable-utility)
 
 # KoreUtilitiesAndEditorTools
 
@@ -291,7 +291,7 @@ We also define several private methods to handle the event with different number
 
 By using the `EventUtility` class, we can easily manage our events and add and remove listeners without having to manage them ourselves. We can also fire the event with custom data of any type, making our code more flexible and reusable.
 
-    # **AddressableUtility** <a name="addressable-utility"></a>
+# **AddressableUtility** <a name="addressable-utility"></a>
 
 The AddressableUtility class provides utility functions for loading, preloading, and unloading Unity Addressable assets asynchronously. It also includes a simple object pool for getting assets that have been loaded.
 
