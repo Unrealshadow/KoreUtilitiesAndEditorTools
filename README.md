@@ -2,7 +2,7 @@
 - [ExcelToJSON Converter](#exceltojson)
 - [Prefab Scanner](#prefab-scanner)
 - [Animation Utility](#animation-utility)
-- [Addressable Utility](#addressable-utility)
+- [Event Utility](#event-utility)
 
 # KoreUtilitiesAndEditorTools
 
@@ -36,9 +36,6 @@ The **`ConvertListOfDictionariesToJson()`** method converts the list of dictiona
 ### **WriteJsonFile()**
 
 The **`WriteJsonFile()`** method writes the JSON string to a file using **`File.WriteAllText()`**.
-
-### **GenerateModelClassFromJSON()**
-Generates a C# model class from the JSON string. The model class has properties for each column in the Excel file with corresponding data types. The model class is saved to the "Assets/Scripts/ModelScripts" folder.
 
 ### **OnGUI()**
 
@@ -124,37 +121,171 @@ AnimationUtility.PlayAnimation("Jump", true, () => Debug.Log("Jump started!"), (
 - This class assumes that the Animator component is attached to the same GameObject that this script is attached to.
 - This class uses a helper MonoBehaviour to run the DelayedCallback coroutine. This MonoBehaviour is created automatically and does not need to be added to any GameObjects.
 
-# **AddressableUtility** <a name="addressable-utility"></a>
-The AddressableUtility class provides utility functions for loading, preloading, and unloading Unity Addressable assets asynchronously. It also includes a simple object pool for getting assets that have been loaded.
+# **EventUtility** <a name="event-utility"></a>
 
-### **Class Members**
+The **`EventUtility`** class provides a simple way to manage Unity events with string keys and support for custom data.
 
-```private static Dictionary<string, AsyncOperationHandle> loadedAssets = new Dictionary<string, AsyncOperationHandle>();```</br>
-A private dictionary that stores the loaded assets' name and handle.
+## **Overview**
 
-```public static async Task<T> LoadAddressableAsset<T>(string assetName) where T : Object```</br>
-Loads the Unity Addressable asset with the specified asset name asynchronously and returns the loaded asset. If the asset is already loaded, the function returns the loaded asset immediately.
+The **`EventUtility`** class provides the following functionality:
 
-**assetName:** The name of the asset to load.</br>
-Returns: The loaded asset.</br>
-```public static async Task<T> LoadAddressableAssetAsync<T>(string assetName) where T : Object```</br>
-Loads the Unity Addressable asset with the specified asset name asynchronously and returns the loaded asset. If the asset is already loaded, the function returns the loaded asset immediately.
+- Add and remove listeners from events with string keys.
+- Fire events with no parameters, one parameter, two parameters, or custom data of any type.
+- Handle events with UnityAction, UnityAction<T>, and UnityAction<T, U> delegates.
 
-**assetName:** The name of the asset to load.</br>
-**Returns:** The loaded asset.</br>
-```public static async Task PreloadAddressables(IEnumerable<string> assetNames)```</br>
-Preloads a list of Unity Addressable assets asynchronously.
+## **Public Methods**
 
-**assetNames:** A list of asset names to preload.</br>
-```public static T GetFromPool<T>(string assetName) where T : Object```</br>
-Returns the loaded Unity Addressable asset with the specified asset name from the object pool.
+### **AddListener**
 
-**assetName:** The name of the asset to get.</br>
-**Returns:** The loaded asset.</br>
-```public static Task UnloadAddressable(string assetName)```</br>
-Unloads the Unity Addressable asset with the specified asset name asynchronously.
+```csharp
+public static void AddListener(string eventName, UnityAction action)
 
-**assetName:** The name of the asset to unload.</br>
-**Returns:** A Task representing the completion of the operation.</br>
-```public static void UnloadAllAddressables()```</br>
-Unloads all the loaded Unity Addressable assets asynchronously.
+```
+
+Adds a listener to the event with the specified name
+
+### Parameters
+
+- **`eventName`**: The name of the event to add the listener to.
+- **`action`**: The action to add as a listener.
+
+### **RemoveListener**
+
+```csharp
+public static void RemoveListener(string eventName, UnityAction action)
+
+```
+
+Removes a listener from the event with the specified name.
+
+### Parameters
+
+- **`eventName`**: The name of the event to remove the listener from.
+- **`action`**: The action to remove as a listener.
+
+### **FireEvent**
+
+```csharp
+public static void FireEvent(string eventName)
+
+```
+
+Fires the event with the specified name.
+
+### Parameters
+
+- **`eventName`**: The name of the event to fire.
+
+### **FireEvent<T>**
+
+```csharp
+public static void FireEvent<T>(string eventName, T arg)
+
+```
+
+Fires the event with one parameter.
+
+### Parameters
+
+- **`eventName`**: The name of the event to fire.
+- **`arg`**: The parameter to pass to the event.
+
+### **FireEvent<T, U>**
+
+```csharp
+public static void FireEvent<T, U>(string eventName, T arg1, U arg2)
+
+```
+
+Fires the event with two parameters.
+
+### Parameters
+
+- **`eventName`**: The name of the event to fire.
+- **`arg1`**: The first parameter to pass to the event.
+- **`arg2`**: The second parameter to pass to the event.
+
+### **FireEventWithCustomData**
+
+```csharp
+public static void FireEventWithCustomData<T>(string eventName, T data)
+
+```
+
+Fires the event with custom data.
+
+### Parameters
+
+- **`eventName`**: The name of the event to fire.
+- **`data`**: The custom data to pass to the event.
+
+## **Static Fields**
+
+### **eventDictionary**
+
+```csharp
+private static Dictionary<string, UnityEvent> eventDictionary = new Dictionary<string, UnityEvent>()
+
+```
+
+A dictionary of events with string keys and UnityEvent values.
+
+## **Usage**
+
+Here's an example of how to use the **`EventUtility`** class:
+```using UnityEngine;
+using UnityEngine.Events;
+
+public class MyEventEmitter : MonoBehaviour
+{
+    // Declare a public UnityEvent field to hold the event
+    public UnityEvent myEvent;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Add a listener to the event
+        EventUtility.AddListener("myEvent", OnMyEvent);
+
+        // Fire the event with no parameters
+        EventUtility.FireEvent("myEvent");
+
+        // Fire the event with one integer parameter
+        int intValue = 42;
+        EventUtility.FireEvent("myEvent", intValue);
+
+        // Fire the event with two parameters: a float and a string
+        float floatValue = 3.14f;
+        string stringValue = "Hello, world!";
+        EventUtility.FireEvent("myEvent", floatValue, stringValue);
+    }
+
+    // This method will be called when the event is fired
+    private void OnMyEvent()
+    {
+        Debug.Log("MyEvent received with no parameters");
+    }
+
+    private void OnMyEvent(int intValue)
+    {
+        Debug.Log("MyEvent received with int parameter: " +intValue);
+}
+
+private void OnMyEvent(float floatValue, string stringValue)
+{
+    Debug.Log("MyEvent received with float parameter: " + floatValue);
+    Debug.Log("MyEvent received with string parameter: " + stringValue);
+}
+
+private void OnDestroy()
+{
+    // Remove the listener when the object is destroyed
+    EventUtility.RemoveListener("myEvent", OnMyEvent);
+}
+
+```
+In this example, we declare a public `UnityEvent` field called `myEvent` to hold the event. We then add a listener to the event using the `EventUtility.AddListener` method in the `Start` method, and fire the event using the `EventUtility.FireEvent` method with various parameters.
+
+We also define several private methods to handle the event with different numbers and types of parameters, and remove the listener in the `OnDestroy` method using the `EventUtility.RemoveListener` method.
+
+By using the `EventUtility` class, we can easily manage our events and add and remove listeners without having to manage them ourselves. We can also fire the event with custom data of any type, making our code more flexible and reusable.
