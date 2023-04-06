@@ -4,6 +4,8 @@
 - [Animation Utility](#animation-utility)
 - [Event Utility](#event-utility)
 - [Addressable Utility](#addressable-utility)
+- [Display Utility 2D](#display-utility-2D)
+
 
 # KoreUtilitiesAndEditorTools
 
@@ -310,3 +312,10 @@ The AddressableUtility class provides utility functions for loading, preloading,
 **assetName:** The name of the asset to get.**Returns:** The loaded asset.`public static Task UnloadAddressable(string assetName)`Unloads the Unity Addressable asset with the specified asset name asynchronously.
 
 **assetName:** The name of the asset to unload.**Returns:** A Task representing the completion of the operation.`public static void UnloadAllAddressables()`Unloads all the loaded Unity Addressable assets asynchronously.
+
+## **Display Utility 2D** <a name="display-utility-2D"></a>
+**Display Utility 2D** contains a set of static functions namely</br>
+**GetHeight(Camera camera)** which returns the height of the view port based on the orthographic size of the camera.</br>
+**GetWidth(Camera camera)** which returns the width of the view port based on the orthographic size of the camera.</br>
+**GetExtremeLeft(Camera camera)** returns the extreme left point of the view.</br>
+**GetExtremeRight(Camera camera)** returns the extreme right point of the view.</br>
